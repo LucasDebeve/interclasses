@@ -1,0 +1,15 @@
+# Add this site block into your main Caddyfile.
+# Replace tournament.example.com with your real domain.
+
+tournament.example.com {
+    encode zstd gzip
+
+    # Optional hardening headers
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    reverse_proxy 127.0.0.1:15173
+}

@@ -6,5 +6,6 @@ __pycache__/
 *$py.class
 
 .env
+backend/.env.prod
 
 node_modules/
