@@ -1,32 +1,37 @@
 services:
 
-  db:
+  tournament-db:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: tournament_db
       POSTGRES_USER: tournament
-      POSTGRES_PASSWORD: tournament_secret
+      POSTGRES_PASSWORD: tournamfe75nt_sedzcret
     volumes:
       - pg_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5434:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U tournament -d tournament_db"]
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - caddy
 
   backend:
     build: ./backend
     restart: unless-stopped
     env_file: ./backend/.env
     environment:
-      DATABASE_URL: postgresql+asyncpg://tournament:tournament_secret@db:5432/tournament_db
+      DATABASE_URL: postgresql+asyncpg://tournament:tournamfe75nt_sedzcret@interclasses-tournament-db-1:5432/tournament_db
+
     ports:
       - "8000:8000"
+    networks:
+      - caddy
     depends_on:
-      db:
+      tournament-db:
         condition: service_healthy
 
   frontend:
@@ -36,6 +41,12 @@ services:
       - "5173:80"
     depends_on:
       - backend
+    networks:
+      - caddy
 
 volumes:
   pg_data:
+
+networks:
+  caddy:
+    external: true
