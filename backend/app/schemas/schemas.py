@@ -80,10 +80,14 @@ class MatchCreate(BaseModel):
     location: Optional[str] = None
 
 class MatchUpdate(BaseModel):
+    home_team_id: Optional[int] = None
+    away_team_id: Optional[int] = None
     home_score: Optional[int] = None
     away_score: Optional[int] = None
     match_date: Optional[datetime] = None
     week: Optional[int] = None
+    stage: Optional[MatchStage] = None
+    group_id: Optional[int] = None
     played: Optional[bool] = None
     location: Optional[str] = None
 

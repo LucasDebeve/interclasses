@@ -310,8 +310,10 @@ function MatchesTab() {
   const { data: groups } = useFetch(getGroups)
   const [showForm, setShowForm] = useState(false)
   const [showImport, setShowImport] = useState(false)
+  const [editDetailsMatch, setEditDetailsMatch] = useState(null)
   const [editMatch, setEditMatch] = useState(null)
   const [form, setForm] = useState({ home_team_id: '', away_team_id: '', match_date: '', week: '', stage: 'group', group_id: '', location: '' })
+  const [editForm, setEditForm] = useState({ home_team_id: '', away_team_id: '', match_date: '', week: '', stage: 'group', group_id: '', location: '', home_score: '', away_score: '', played: false })
   const [scoreForm, setScoreForm] = useState({ home_score: '', away_score: '' })
   const [importData, setImportData] = useState('')
   const [importResult, setImportResult] = useState(null)
@@ -346,6 +348,48 @@ function MatchesTab() {
         played: scoreForm.home_score !== '' && scoreForm.away_score !== '',
       })
       setEditMatch(null)
+      reload()
+    } finally { setSubmitting(false) }
+  }
+
+  const openEditDetails = (m) => {
+    setEditDetailsMatch(m)
+    setEditForm({
+      home_team_id: String(m.home_team_id),
+      away_team_id: String(m.away_team_id),
+      match_date: m.match_date ? format(new Date(m.match_date), "yyyy-MM-dd'T'HH:mm") : '',
+      week: m.week ?? '',
+      stage: m.stage || 'group',
+      group_id: m.group_id ? String(m.group_id) : '',
+      location: m.location || '',
+      home_score: m.home_score ?? '',
+      away_score: m.away_score ?? '',
+      played: m.played,
+    })
+  }
+
+  const handleUpdateDetails = async (e) => {
+    e.preventDefault()
+    if (editForm.home_team_id === editForm.away_team_id) {
+      window.alert('Les deux equipes doivent etre differentes.')
+      return
+    }
+    setSubmitting(true)
+    try {
+      const hasScores = editForm.home_score !== '' && editForm.away_score !== ''
+      await updateMatch(editDetailsMatch.id, {
+        home_team_id: +editForm.home_team_id,
+        away_team_id: +editForm.away_team_id,
+        match_date: editForm.match_date || null,
+        week: editForm.week !== '' ? +editForm.week : null,
+        stage: editForm.stage,
+        group_id: editForm.group_id ? +editForm.group_id : null,
+        location: editForm.location || null,
+        home_score: editForm.home_score !== '' ? +editForm.home_score : null,
+        away_score: editForm.away_score !== '' ? +editForm.away_score : null,
+        played: hasScores ? true : !!editForm.played,
+      })
+      setEditDetailsMatch(null)
       reload()
     } finally { setSubmitting(false) }
   }
@@ -473,6 +517,73 @@ function MatchesTab() {
         </Modal>
       )}
 
+      {editDetailsMatch && (
+        <Modal title={`Modifier : ${editDetailsMatch.home_team_name} — ${editDetailsMatch.away_team_name}`} onClose={() => setEditDetailsMatch(null)}>
+          <form className="form-grid" onSubmit={handleUpdateDetails}>
+            <div className="form-grid form-grid-2">
+              <FormField label="Équipe domicile *">
+                <select value={editForm.home_team_id} onChange={e => setEditForm(f => ({ ...f, home_team_id: e.target.value }))} required>
+                  <option value="">Choisir…</option>
+                  {teams?.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+              </FormField>
+              <FormField label="Équipe extérieur *">
+                <select value={editForm.away_team_id} onChange={e => setEditForm(f => ({ ...f, away_team_id: e.target.value }))} required>
+                  <option value="">Choisir…</option>
+                  {teams?.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+              </FormField>
+            </div>
+
+            <div className="form-grid form-grid-2">
+              <FormField label="Date & heure">
+                <input type="datetime-local" value={editForm.match_date} onChange={e => setEditForm(f => ({ ...f, match_date: e.target.value }))} />
+              </FormField>
+              <FormField label="Journée">
+                <input type="number" min={1} value={editForm.week} onChange={e => setEditForm(f => ({ ...f, week: e.target.value }))} placeholder="ex: 1" />
+              </FormField>
+            </div>
+
+            <div className="form-grid form-grid-2">
+              <FormField label="Phase">
+                <select value={editForm.stage} onChange={e => setEditForm(f => ({ ...f, stage: e.target.value }))}>
+                  {STAGES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                </select>
+              </FormField>
+              <FormField label="Poule">
+                <select value={editForm.group_id} onChange={e => setEditForm(f => ({ ...f, group_id: e.target.value }))}>
+                  <option value="">Aucune</option>
+                  {groups?.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
+                </select>
+              </FormField>
+            </div>
+
+            <FormField label="Lieu">
+              <input value={editForm.location} onChange={e => setEditForm(f => ({ ...f, location: e.target.value }))} placeholder="Stade, ville…" />
+            </FormField>
+
+            <div className="form-grid form-grid-2">
+              <FormField label="Score domicile">
+                <input type="number" min={0} value={editForm.home_score} onChange={e => setEditForm(f => ({ ...f, home_score: e.target.value }))} placeholder="—" />
+              </FormField>
+              <FormField label="Score extérieur">
+                <input type="number" min={0} value={editForm.away_score} onChange={e => setEditForm(f => ({ ...f, away_score: e.target.value }))} placeholder="—" />
+              </FormField>
+            </div>
+
+            <label className="checkbox-label">
+              <input type="checkbox" checked={!!editForm.played} onChange={e => setEditForm(f => ({ ...f, played: e.target.checked }))} />
+              Match joué
+            </label>
+
+            <div className="form-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => setEditDetailsMatch(null)}>Annuler</button>
+              <button type="submit" className="btn btn-primary" disabled={submitting}>Enregistrer</button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
       {editMatch && (
         <Modal title={`Score : ${editMatch.home_team_name} — ${editMatch.away_team_name}`} onClose={() => setEditMatch(null)} size="sm">
           <form className="form-grid" onSubmit={handleScore}>
@@ -529,6 +640,12 @@ function MatchesTab() {
                 </td>
                 <td className="right">
                   <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end' }}>
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => openEditDetails(m)}
+                    >
+                      <Edit size={13} /> Modifier
+                    </button>
                     <button
                       className="btn btn-ghost btn-sm"
                       onClick={() => { setEditMatch(m); setScoreForm({ home_score: m.home_score ?? '', away_score: m.away_score ?? '' }) }}

@@ -92,7 +92,14 @@ async def update_match(
     match = result.scalar_one_or_none()
     if not match:
         raise HTTPException(status_code=404, detail="Match introuvable")
-    for field, value in data.model_dump(exclude_unset=True).items():
+
+    incoming = data.model_dump(exclude_unset=True)
+    next_home_id = incoming.get("home_team_id", match.home_team_id)
+    next_away_id = incoming.get("away_team_id", match.away_team_id)
+    if next_home_id == next_away_id:
+        raise HTTPException(status_code=400, detail="Les deux equipes doivent etre differentes")
+
+    for field, value in incoming.items():
         setattr(match, field, value)
     # Auto-mark as played if both scores are set
     if match.home_score is not None and match.away_score is not None:
