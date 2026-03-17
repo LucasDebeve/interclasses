@@ -1,0 +1,82 @@
+.standings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+  gap: 1.25rem;
+}
+
+.group-card { }
+
+.standing-row.promotion td { position: relative; }
+.standing-row.promotion td:first-child::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+}
+
+.rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.rank-top {
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+.team-name { display: inline; }
+.team-short {
+  display: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.gd.pos { color: var(--accent); }
+.gd.neg { color: var(--red); }
+
+.points {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+@media (max-width: 760px) {
+  .standings-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .team-name {
+    display: none;
+  }
+
+  .team-short {
+    display: inline;
+    font-size: 0.82rem;
+  }
+
+  .rank {
+    width: 20px;
+    height: 20px;
+    font-size: 0.68rem;
+  }
+}

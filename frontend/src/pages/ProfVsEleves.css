@@ -1,0 +1,239 @@
+.pve-card {
+  padding: 1rem 1.25rem;
+}
+
+.pve-section + .pve-section {
+  margin-top: 1.1rem;
+}
+
+.pve-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.65rem;
+}
+
+.pve-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.7rem;
+}
+
+.pve-chip {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pve-chip.profs {
+  border-color: rgba(99, 186, 255, 0.45);
+  background: rgba(79, 168, 255, 0.16);
+  color: #9bd3ff;
+}
+
+.pve-hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.pve-pitch {
+  position: relative;
+  width: 100%;
+  min-height: 440px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    radial-gradient(circle at 50% 65%, rgba(93, 255, 110, 0.12), transparent 46%),
+    linear-gradient(180deg, #1f6a37 0%, #1a5a2f 100%);
+  overflow: hidden;
+}
+
+.pve-pitch::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.035) 0,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 44px
+  );
+}
+
+.pve-goal {
+  position: absolute;
+  left: 38%;
+  right: 38%;
+  bottom: 0;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+
+.pve-box {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 90px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-bottom: none;
+}
+
+.pve-center-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 2px solid rgba(255, 255, 255, 0.45);
+}
+
+.pve-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 84px;
+  min-height: 66px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+}
+
+.pve-node.profs {
+  background: rgba(20, 29, 32, 0.514);
+  border-color: rgba(217, 236, 255, 0.45);
+}
+
+.pve-node-number {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(13, 15, 14, 0.72);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.pve-node-name {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.pve-bench {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pve-lines {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.pve-line-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+}
+
+.pve-line-title {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.pve-line-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.pve-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.pve-edit-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.65rem;
+  background: var(--bg-surface);
+}
+
+.pve-edit-row {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.pve-edit-row-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pve-edit-card label,
+.form-grid > label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 760px) {
+  .pve-card {
+    padding: 0.85rem;
+  }
+
+  .pve-pitch {
+    min-height: 360px;
+  }
+
+  .pve-node {
+    width: 66px;
+    min-height: 56px;
+    border-radius: 8px;
+  }
+
+  .pve-node-name {
+    font-size: 0.62rem;
+  }
+
+  .pve-lines {
+    grid-template-columns: 1fr;
+  }
+
+  .pve-edit-grid,
+  .pve-edit-row-2 {
+    grid-template-columns: 1fr;
+  }
+}
